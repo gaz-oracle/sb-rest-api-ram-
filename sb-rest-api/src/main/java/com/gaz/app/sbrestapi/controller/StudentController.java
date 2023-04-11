@@ -17,7 +17,7 @@ public class StudentController {
 /** STEPS:
  * 1. CREATE BEAN STUDENT (MODEL)
  * 2. CREATE CONTROLLER STUDENT
- * 3. CREATE API OF SB, TO RETURN A JAVA BEAN AS JSON CLIENT
+ * 3. CREATE API OF SB on CONTROLLER STUDENT , TO RETURN A JAVA BEAN AS JSON CLIENT
  * siempre que un cliente quiera llamar a esta API, el cliente tiene que usar esta URL, por ejemplo, http:
  * http://localhost:8080/student
  * creacion de la API de Spring Boot que devuelve Java bean como JSON al cliente.
