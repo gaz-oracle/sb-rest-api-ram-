@@ -1,10 +1,8 @@
 package com.gaz.app.sbrestapi.controller;
 
 import com.gaz.app.sbrestapi.bean.Student;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,11 +37,6 @@ public class StudentController {
         return new Student(liststudentid, firstName, lastName);
     }
 
-    /**
-     * SB REST API WITH REQUEST PARAMERT
-     * http://localhost:8080/liststudent/query?id=67 <----QUERY PARAMETER
-     */
-
     @GetMapping("liststudent/query")
     public Student studentRequestVariable(@RequestParam int id){
         return new Student(id, "John", "DoE");
@@ -56,9 +49,6 @@ public class StudentController {
         return new Student(id,firstName ,lastName);
     }
 
-    /** http://localhost:8080/employees?id=555&firstName=Leonel&lastName=Ayala
-     * N
-     */
     @GetMapping("employees")
     public Student employees(@RequestParam int id,
                                            @RequestParam String firstName,
@@ -66,28 +56,20 @@ public class StudentController {
         return new Student(id,firstName ,lastName);
     }
 
+/**
+ * SB REST API that handles HTTP POST Request
+ * // @PostMapping and @RequestBody
+ */
 
-
-    /** http://localhost:8080/liststudent/query2?id=1&firstName=John&lastName=Doe
-     * Es como básicamente se escribe una API REST de SB para manejar los parámetros
-     * de consulta en una URL de solicitud.
-     *
-     * @PathVariable vs @RequestParam  : PathVariable se utilza para enlazar el valor de la variable
-     * de la plantilla URL en el metodo y  la  anotación @RequestParam  para extraer el valor de
-     * los parámetros de consulta en una solicitud.
-     * */
+@PostMapping("create")
+@ResponseStatus(HttpStatus.CREATED) // ok
+public Student StudentController(@RequestBody Student student){
+    System.out.println(student.getId());
+    System.out.println(student.getFirstName());
+    System.out.println(student.getLastName());
+    return student;
+   // return new ResponseEntity<>(student, HttpStatus.CREATED);
+}
 
 }
 
-/**
- * 1.Sprin Boot REST Api with Path Variable
- * 2. {id} - URI template variable
- * 3. http://localhost:8080/liststudent/1"
- * 4. la Url contiene, una variable y para obtener esta variable se utiliza la anoatccion: @PathVariable("id")
- * 5. Se pueden pasar multiples variables de Path*/
-/**
- *  @GetMapping("/liststudent/{id}")
- *     public Student studentPathVariable(@PathVariable("id") int liststudentid){
- *         return new Student(liststudentid, "Ram", "Fadatare");
- *     }
- */
