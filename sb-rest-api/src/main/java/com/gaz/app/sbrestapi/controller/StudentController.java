@@ -3,6 +3,7 @@ package com.gaz.app.sbrestapi.controller;
 import com.gaz.app.sbrestapi.bean.Student;
 import jdk.jfr.Percentage;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -11,31 +12,48 @@ import java.util.List;
 @RestController
 public class StudentController {
 
-    @GetMapping("/student")
-    public Student getStudent(){
-        Student student = new Student(1,"Fco", "Gaz");
-        return student;
+    // http://localhost:8080/student
+    @GetMapping("student")
+    public ResponseEntity<Student> getStudent(){
+        Student student = new Student(
+                100,
+                "Fco",
+                "Gaz"
+        );
+        // return new ResponseEntity<>(student, HttpStatus.OK);
+        return ResponseEntity.ok()
+                .header("custom-header", "App.com")
+                .body(student);
     }
-    @GetMapping("/liststudent")
-    public List<Student> getStudents(){
+
+
+    // http://localhost:8080/students
+    @GetMapping("students")
+    public ResponseEntity<List<Student>> getStudents(){
         List<Student> students = new ArrayList<>();
         students.add(new Student(1, "Fco", "Gaz"));
         students.add(new Student(2, "Leo", "Moro"));
-        students.add(new Student(3, "Isa", "Gaz Moro"));
-        return students;
+        students.add(new Student(3, "Isa", "Gaz Moro"));;
+        return ResponseEntity.ok(students);
     }
 
-    //http://localhost:8080/liststudent2/1
-    @GetMapping("/liststudent2/{id}")
-    public Student studentPathVariable2(@PathVariable("id") int studentid){
-        return new Student(studentid, "Gaz", "Spring");
+    //http://localhost:8080/students/1/Gaz/App
+    @GetMapping("students/{id}/{first-name}/{last-name}")
+    public ResponseEntity<Student> studentPathVariable(@PathVariable("id") int studentId,
+                                                       @PathVariable("first-name") String firstName,
+                                                       @PathVariable("last-name") String lastName){
+        Student student = new Student(studentId, firstName, lastName);
+        return ResponseEntity.ok(student);
     }
-    //http://localhost:8080/liststudent/555/Gaz/App
-    @GetMapping("/liststudent/{id}/{first-name}/{last-name}")
-    public Student studentPathVariable(@PathVariable("id") int liststudentid,
-                                       @PathVariable("first-name") String firstName,
-                                       @PathVariable("last-name") String lastName){
-        return new Student(liststudentid, firstName, lastName);
+
+    // Spring boot REST API with Request Param
+    //  http://localhost:8080/students/query?id=1&firstName=Ramesh&lastName=Fadatare
+    @GetMapping("/students/query")
+    public ResponseEntity<Student> studentRequestVariable(@RequestParam int id,
+                                                          @RequestParam String firstName,
+                                                          @RequestParam String lastName){
+        Student student = new Student(id, firstName, lastName);
+        return ResponseEntity.ok(student);
     }
 
     @GetMapping("liststudent/query")
@@ -62,26 +80,26 @@ public class StudentController {
  * // @PostMapping and @RequestBody
  */
 
+// Spring boot REST API that handles HTTP POST Request - creating new resource
+// @PostMapping and @RequestBody
 @PostMapping("create")
-@ResponseStatus(HttpStatus.CREATED)// ok
-public Student StudentCreate(@RequestBody Student student){
+@ResponseStatus(HttpStatus.CREATED)
+public ResponseEntity<Student> createStudent(@RequestBody Student student){
     System.out.println(student.getId());
     System.out.println(student.getFirstName());
     System.out.println(student.getLastName());
-    return student;
-   // return new ResponseEntity<>(student, HttpStatus.CREATED);
+    return new ResponseEntity<>(student, HttpStatus.CREATED);
 }
 /**
  * PUT UPDATE A RESOURCE
  * SB - CREATE REST API THE HANDLES HTTP PU REQUEST -> UPDATING EXISTING RESOURCE
  */
-  @PutMapping("/university/{id}/update")
-  @ResponseStatus(HttpStatus.ACCEPTED) // ok
-    public Student updateStudent (@RequestBody Student student,@PathVariable("id") int studentid){
-      System.out.println(student.getFirstName());
-      System.out.println(student.getLastName());
-      return student;
-  }
+@PutMapping("{id}/update")
+public ResponseEntity<Student> updateStudent(@RequestBody Student student, @PathVariable("id") int studentId){
+    System.out.println(student.getFirstName());
+    System.out.println(student.getLastName());
+    return ResponseEntity.ok(student);
+}
 
     /**
      * Cada vez que el cliente realiza una solicitud de eleminación HTTP, el cliente tiene que enviar
@@ -90,11 +108,29 @@ public Student StudentCreate(@RequestBody Student student){
      *
      * SB REST API that handles HTTP DELETE Request - deleting the existing resource.
      */
-    @DeleteMapping("/university/{id}/delete")
-    public String deleteStudent(@PathVariable("id") int studentID){
-        System.out.println(studentID);
-        return "Student Deleted successfully !!!";
+    // Spring boot REST API that handles HTTP DELETE Request - deleting the existing resource
+    @DeleteMapping("{id}/delete")
+    public ResponseEntity<String> deleteStudent(@PathVariable("id") int studentId){
+        System.out.println(studentId);
+        return ResponseEntity.ok("Student deleted successfully!");
     }
+
+    /**
+     * ResponseEntity: es una clase muy util para crear una respuesta HTTP completa
+     * para SB API REST
+     *
+     * 1. ResponseEntity: Representa todo un conjunto de respuestas HTTP compeltas.
+     *  como codigo de estado, encabezados y cuerpo, como resultado podemos usarlos
+     *  para configurar la Respuesta HTTP.
+     *  Normalmente se prefiere para utilzar una respuesta.
+     *
+     *  2.Si queremos usar esto, tenemos que retornar desde el endpoit y SB se encargara del resto
+     *  Nuestra API tiene que delvorver una instancia de la clase ResponseEntity y SB se
+     *  encargara del resto. SB creara isntancias de esta clase ResponseEntity en la INSTANCIA HTTP.
+     *
+     *  3.ResponseEntity es generica  por lo que podemos pasar cualquier tipo de clase generica ResponseEntity.
+     *
+     */
 
 }
 
