@@ -64,7 +64,7 @@ public class StudentController {
 
 @PostMapping("create")
 @ResponseStatus(HttpStatus.CREATED)// ok
-public Student StudentController(@RequestBody Student student){
+public Student StudentCreate(@RequestBody Student student){
     System.out.println(student.getId());
     System.out.println(student.getFirstName());
     System.out.println(student.getLastName());
@@ -82,6 +82,19 @@ public Student StudentController(@RequestBody Student student){
       System.out.println(student.getLastName());
       return student;
   }
+
+    /**
+     * Cada vez que el cliente realiza una solicitud de eleminación HTTP, el cliente tiene que enviar
+     * un metodo HTTP de eliminaccion en la solicitud.
+     * El cliente no tiene que enviar ningun dato en el cuerpo de la solicitud, solo el id del  Item a eliminar.
+     *
+     * SB REST API that handles HTTP DELETE Request - deleting the existing resource.
+     */
+    @DeleteMapping("/university/{id}/delete")
+    public String deleteStudent(@PathVariable("id") int studentID){
+        System.out.println(studentID);
+        return "Student Deleted successfully !!!";
+    }
 
 }
 
