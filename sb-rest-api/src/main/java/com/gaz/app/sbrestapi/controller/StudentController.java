@@ -1,6 +1,7 @@
 package com.gaz.app.sbrestapi.controller;
 
 import com.gaz.app.sbrestapi.bean.Student;
+import jdk.jfr.Percentage;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,12 +58,12 @@ public class StudentController {
     }
 
 /**
- * SB REST API that handles HTTP POST Request
+ * SB REST API that handles HTTP POST Request -> CREATING NEW RESOURCES
  * // @PostMapping and @RequestBody
  */
 
 @PostMapping("create")
-@ResponseStatus(HttpStatus.CREATED) // ok
+@ResponseStatus(HttpStatus.CREATED)// ok
 public Student StudentController(@RequestBody Student student){
     System.out.println(student.getId());
     System.out.println(student.getFirstName());
@@ -70,6 +71,17 @@ public Student StudentController(@RequestBody Student student){
     return student;
    // return new ResponseEntity<>(student, HttpStatus.CREATED);
 }
+/**
+ * PUT UPDATE A RESOURCE
+ * SB - CREATE REST API THE HANDLES HTTP PU REQUEST -> UPDATING EXISTING RESOURCE
+ */
+  @PutMapping("/university/{id}/update")
+  @ResponseStatus(HttpStatus.ACCEPTED) // ok
+    public Student updateStudent (@RequestBody Student student,@PathVariable("id") int studentid){
+      System.out.println(student.getFirstName());
+      System.out.println(student.getLastName());
+      return student;
+  }
 
 }
 
